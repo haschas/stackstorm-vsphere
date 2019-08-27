@@ -1,0 +1,27 @@
+---
+    name: "vm_migrate_cluster_ds"
+    runner_type: "python-script"
+    description: "Migrate Virtual Machine between clusters and datastores."
+    enabled: true
+    entry_point: "vm_migrate_cluster_ds.py"
+    parameters:
+      vm_id:
+        type: "string"
+        description: "Virtual Machine ID (vm-1234)"
+        required: false
+        position: 0
+      vm_name:
+        type: "string"
+        description: "Virtual Machine Name"
+        required: false
+        position: 1
+      vsphere:
+        type: "string"
+        description: "Pre-Configured Vsphere to connect to"
+        required: false
+        position: 2
+        default: ~
+      cluster:
+        type: "string"
+        description: "Destination cluster"
+        required: true

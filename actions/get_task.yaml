@@ -1,0 +1,17 @@
+---
+  name: "get_task"
+  runner_type: "python-script"
+  description: "Get task and returns its result."
+  enabled: true
+  entry_point: "get_task.py"
+  parameters: 
+    task_id: 
+      type: "string"
+      description: "Task to track (task-111)"
+      required: true
+    vsphere:
+      type: "string"
+      description: "Pre-Configured vsphere connection details"
+      required: false
+      position: 1
+      default: ~

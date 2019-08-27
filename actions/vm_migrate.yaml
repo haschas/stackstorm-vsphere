@@ -1,0 +1,31 @@
+---
+    name: "vm_migrate"
+    runner_type: "python-script"
+    description: "Migrate Virtual Machine between datastores, hosts."
+    enabled: true
+    entry_point: "vm_migrate.py"
+    parameters:
+      vm_id:
+        type: "string"
+        description: "Virtual Machine ID (vm-1234)"
+        required: false
+        position: 0
+      vm_name:
+        type: "string"
+        description: "Virtual Machine Name"
+        required: false
+        position: 1
+      vsphere:
+        type: "string"
+        description: "Pre-Configured Vsphere to connect to"
+        required: false
+        position: 2
+        default: ~
+      datastore:
+        type: "string"
+        description: "Destination datastore to migrate to"
+        required: false
+      datastore_cluster:
+        type: "string"
+        description: "Datastore Cluster to migrate to"
+        required: false
