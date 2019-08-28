@@ -28,11 +28,15 @@ class GetStorageWwn(BaseAction):
         datastore_container = inventory.get_resources(self.si_content, vim.Datastore)
         datastores_list = datastore_container.view
         datastore_container.Destroy()
-        # iterate through clusters
-        for d in datastores_list:
-            if d.name == storage_name:
-                for te in d.info.vmfs.extent:
-                    result = {'name': d.name, 'wwn': te.diskName}
-            else:
-                return result
-        return result
+
+        # get datastore object
+        ds_obj = get_datastore(content, name=storage_name)
+
+        if ds_obj in datastores_list:
+            # iterate through clusters
+            for d in datastores_list:
+                if d.name == storage_name:
+                    for te in d.info.vmfs.extent:
+                        return ({'name': d.name, 'wwn': te.diskName})
+        else:
+            return (False, {'state': False, 'msg': 'Datastore not found'})
