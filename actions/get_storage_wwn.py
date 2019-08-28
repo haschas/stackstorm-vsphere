@@ -31,7 +31,7 @@ class GetStorageWwn(BaseAction):
         datastore_container.Destroy()
 
         # get datastore object
-        ds_obj = inventory.get_datastore(content, name=storage_name)
+        ds_obj = inventory.get_datastore(self.si_content, name=storage_name)
 
         if ds_obj in datastores_list:
             # iterate through datastores
