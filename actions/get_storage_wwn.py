@@ -26,7 +26,7 @@ class GetStorageWwn(BaseAction):
 
         # getting information for provided storage
         #datastore_container = inventory.get_resources(self.si_content, vim.Datastore)
-        datastore_container = self.si_content.viewManager.CreateContainerView(content.rootFolder, [vim.Datastore], True)
+        datastore_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.Datastore], True)
         datastores_list = datastore_container.view
         datastore_container.Destroy()
 
