@@ -19,6 +19,7 @@ import json
 from pyVmomi import vim  # pylint: disable-msg=E0611
 
 from vmwarelib import inventory
+from vmwarelib import checkinputs
 from vmwarelib.actions import BaseAction
 
 
@@ -55,4 +56,3 @@ class GetStorageWwn(BaseAction):
                 return
 
         return result
-    
