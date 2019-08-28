@@ -112,6 +112,10 @@ def get_virtualmachines(content):
     return get_managed_entities(content, vim.VirtualMachine)
 
 
+def get_resources(content, vimtype):
+    return get_managed_entities(content, [vimtype])
+
+
 def get_task(content, moid=None):
     return get_managed_entity(content, vim.Task,
                               moid=moid, name=None)
