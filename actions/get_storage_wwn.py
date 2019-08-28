@@ -34,7 +34,7 @@ class GetStorageWwn(BaseAction):
         ds_obj = get_datastore(content, name=storage_name)
 
         if ds_obj in datastores_list:
-            # iterate through clusters
+            # iterate through datastores
             for d in datastores_list:
                 if d.name == storage_name:
                     for te in d.info.vmfs.extent:
