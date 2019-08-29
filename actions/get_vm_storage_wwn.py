@@ -45,7 +45,7 @@ class GetVmStorageWwn(BaseAction):
                             if d == vmd:
                                 for te in d.info.vmfs.extent:
                                     vm_disks_list.append({'datastore': d.name, 'wwn': te.diskName})
-                                vm_ds_wwns[vm.vm.config.name] = vm_disks_list
+                                vm_ds_wwns[vm.name] = vm_disks_list
                     else:
                         vm_ds_wwns[vm.name] = {'msg': 'Datastore {} was not found.'.format(vmd.name)}
             else:
