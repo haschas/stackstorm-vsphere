@@ -6,7 +6,7 @@
     entry_point: "get_vm_storage_wwn.py"
     parameters:
       vm_name:
-        type: "string"
+        type: "array"
         description: "Virtual Machine Name"
         required: true
         position: 0
