@@ -48,8 +48,6 @@ class GetVmStorageWwn(BaseAction):
                                 vm_ds_wwns[vm.name] = vm_disks_list
                     else:
                         vm_ds_wwns[vm.name] = {'msg': 'Datastore {} was not found.'.format(vmd.name)}
-            else:
-                vm_ds_wwns[vm.name] = {'msg': 'VirtualMachine {} was not found.'.format(vm.name)}
 
         result = vm_ds_wwns
 
