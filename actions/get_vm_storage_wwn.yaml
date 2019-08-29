@@ -5,14 +5,14 @@
     enabled: true
     entry_point: "get_vm_storage_wwn.py"
     parameters:
-      vm_name:
+      vm_names:
         type: "array"
-        description: "Virtual Machine Name"
+        description: "Comma-separated names of Virtual Machines."
         required: true
         position: 0
       vsphere:
         type: "string"
-        description: "Pre-Configured Vsphere to connect to"
+        description: "Pre-Configured vsphere connection details."
         required: false
         position: 1
         default: ~

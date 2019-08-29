@@ -5,7 +5,7 @@ from vmwarelib.actions import BaseAction
 
 
 class GetVmStorageWwn(BaseAction):
-    def run(self, vm_name, vsphere=None):
+    def run(self, vm_names, vsphere=None):
         """
         Retrieve Storage WWN
 
@@ -21,7 +21,8 @@ class GetVmStorageWwn(BaseAction):
         result, error = None, None
 
         # get virtual machines
-        vms_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.VirtualMachine], True)
+        vms_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder,
+                                                                        [vim.VirtualMachine], True)
         vms_list = vms_container.view
         vms_container.Destroy()
 
