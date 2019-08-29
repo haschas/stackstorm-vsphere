@@ -1,0 +1,18 @@
+---
+    name: "get_vm_storage_wwn"
+    runner_type: "python-script"
+    description: "Get VM Storage WWN."
+    enabled: true
+    entry_point: "get_vm_storage_wwn.py"
+    parameters:
+      vm_name:
+        type: "string"
+        description: "Virtual Machine Name"
+        required: true
+        position: 0
+      vsphere:
+        type: "string"
+        description: "Pre-Configured Vsphere to connect to"
+        required: false
+        position: 1
+        default: ~
