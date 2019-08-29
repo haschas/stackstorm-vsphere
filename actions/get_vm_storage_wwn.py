@@ -20,30 +20,36 @@ class GetVmStorageWwn(BaseAction):
         self.establish_connection(vsphere)
         result, error = None, None
 
-        # getting information for provided storage
-        datastore_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.Datastore], True)
+        # get virtual machines
+        vms_container = content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.VirtualMachine], True)
+        vms_list = vms_container.view
+        vms_container.Destroy()
+
+        vm_ds_wwns = {}
+
+        # get storages
+        datastore_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder,
+                                                                              [vim.Datastore], True)
         datastores_list = datastore_container.view
         datastore_container.Destroy()
 
-        vm_disks = []
         # get vm object
-        vm_obj = inventory.get_virtualmachine(self.si_content, name=vm_name)
-        if vm_obj:
-            for vmd in vm_obj.datastore:
-                if vmd in datastores_list:
-                    # iterate through datastores
-                    for d in datastores_list:
-                        if d == vmd:
-                            for te in d.info.vmfs.extent:
-                                vm_disks.append({'name': d.name, 'wwn': te.diskName})
-                else:
-                    error = "Unable to find datastore {0}.".format(vmd.name)
-        else:
-            error = "Unable to retrieve VM {0} details. Check name provided.".format(vm_name)
+        for vm in vms_list:
+            if vm.name in vm_names:
+                vm_ds_wwns[vm.name] = {}
+                vm_disks_list = []
+                for vmd in vm.datastore:
+                    if vmd in datastores_list:
+                        for d in datastores_list:
+                            if d == vmd:
+                                for te in d.info.vmfs.extent:
+                                    vm_disks_list.append({'datastore': d.name, 'wwn': te.diskName})
+                                vm_ds_wwns[vm.vm.config.name] = vm_disks_list
+                    else:
+                        vm_ds_wwns[vm.name] = {'msg': 'Datastore {} was not found.'.format(vmd.name)}
+            else:
+                vm_ds_wwns[vm.name] = {'msg': 'VirtualMachine {} was not found.'.format(vm.name)}
 
-        result = vm_disks
+        result = vm_ds_wwns
 
-        if error:
-            return (False, {'state': False, 'msg': error})
-        else:
-            return result
+        return result
