@@ -21,7 +21,7 @@ class GetVmStorageWwn(BaseAction):
         result, error = None, None
 
         # get virtual machines
-        vms_container = content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.VirtualMachine], True)
+        vms_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder, [vim.VirtualMachine], True)
         vms_list = vms_container.view
         vms_container.Destroy()
 
