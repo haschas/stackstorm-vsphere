@@ -16,6 +16,34 @@
 from pyVmomi import vim  # pylint: disable-msg=E0611
 
 
+def get_task_entity(content, moid=None):
+    if not moid:
+        return
+    containerContent = content.taskManager
+    tasks = containerContent.CreateCollectorForTasks(vim.TaskFilterSpec())
+    tasks.ResetCollector()
+    all_tasks = tasks.ReadNextTasks(999)
+    tasks = []
+    for task in all_tasks:
+        tasks.append(task.key)
+        if task.key == moid:
+            results = {'task_id': str(task.key), 
+                        'entity_name': str(task.entityName), 
+                        'task_description_id': str(task.descriptionId), 
+                        'task_state': str(task.state), 
+                        'task_result': str(task.result)}
+            if task.entity:
+                entity = str(task.entity).strip("'")
+                vimType, extId = entity.split(':')
+                results.update( {'entity': str(entity), 'vim_type' : vimType, 'ext_id': extId} )
+            if task.error:
+                results.update({'error_message': str(task.error.msg)})
+        elif moid not in tasks:
+            results = {'task_id': moid, 'error_message': 'Task not found.'}
+
+    return results
+
+
 def get_managed_entity(content, vimtype, moid=None, name=None):
     if not name and not moid:
         return
@@ -119,3 +147,10 @@ def get_resources(content, vimtype):
 def get_task(content, moid=None):
     return get_managed_entity(content, vim.Task,
                               moid=moid, name=None)
+
+def get_task(content, moid=None):
+    return get_managed_entity(content, vim.Task,
+                              moid=moid, name=None)
+
+def get_task_new(content, moid=None):
+    return get_task_entity(content, moid=moid)
