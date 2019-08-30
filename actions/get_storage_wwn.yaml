@@ -5,7 +5,7 @@
     enabled: true
     entry_point: "get_storage_wwn.py"
     parameters:
-      storage_name:
+      storage_names:
         type: "array"
         description: "Comma-separated names of Datastores."
         required: true
