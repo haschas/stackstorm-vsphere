@@ -6,18 +6,13 @@
     entry_point: "get_storage_wwn.py"
     parameters:
       storage_name:
-        type: "string"
-        description: "Storage Name to retrieve WWN for"
+        type: "array"
+        description: "Comma-separated names of Datastores."
         required: true
         position: 0
-      vm_name:
-        type: "string"
-        description: "Virtual Machine Name"
-        required: false
-        position: 1
       vsphere:
         type: "string"
         description: "Pre-Configured Vsphere to connect to"
         required: false
-        position: 2
+        position: 1
         default: ~
