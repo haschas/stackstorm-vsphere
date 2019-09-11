@@ -1,0 +1,28 @@
+---
+  name: update_snow_with_vm_datastore_wwn
+  runner_type: orquesta
+  entry_point: workflows/update_snow_with_vm_datastore_wwn.yaml
+  enabled: true
+  description: "Update SNOW ticket with VM datastores WWNs."
+  parameters:
+    vm_names:
+      type: array
+      description: "Virutal Machine name to rertieve datastore WWNs."
+      required: true
+      position: 0
+    vsphere:
+      type: string
+      description: "Pre-configured vSphere connection details."
+      required: false
+      position: 1
+      default: ~
+    sysid:
+      type: string
+      description: "ServiceNow SysId of a ticket."
+      required: true
+      position: 2
+    table:
+      type: string
+      description: "ServiceNow ticket table name."
+      required: true
+      position: 3

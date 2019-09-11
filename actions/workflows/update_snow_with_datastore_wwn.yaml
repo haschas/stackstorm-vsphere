@@ -1,0 +1,46 @@
+version: '1.0'
+
+description: Update SNOW ticket with datastore WWNs.
+
+input:
+  - storage_names
+  - vsphere
+  - sysid
+  - table
+
+vars:
+  - script_exit_code: -1
+  - payload: ''
+  - script_stdout: ''
+  - script_stderr: ''
+  - ds_wwns: ''
+  - state: ''
+
+output:
+  - exit_code: <% ctx().script_exit_code %>
+  - stderr: <% ctx().script_stderr %>
+  - stdout: <% ctx().script_stdout %>
+
+tasks:
+  get_storage_wwn:
+    action: vsphere.get_storage_wwn
+    input:
+      storage_names: <% ctx().storage_names %>
+      vsphere: <% ctx().vsphere %>
+    next:
+      - when: <% succeeded() %>
+        publish: 
+          - ds_wwns: <% result().result %>
+          - state: 3
+        do: update_snow
+      - when: <% failed() %>
+        publish:
+          - state: 4
+        do: update_snow
+  
+  update_snow:
+    action: servicenow.update
+    input:
+      sysid: <% ctx().sysid %>
+      table: <% ctx().table %>
+      payload: '{"state": <% ctx().state %>, "work_notes": "Datastore(s): <% ctx().storage_names %>\n Result(s): <% ctx().ds_wwns %>."}'
