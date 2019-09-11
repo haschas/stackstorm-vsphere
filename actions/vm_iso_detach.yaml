@@ -1,0 +1,27 @@
+---
+  name: vm_iso_detach
+  runner_type: python-script
+  description: Detach ISO from Virtualmachine
+  entry_point: vm_iso_detach.py
+  parameters:
+    vm_id:
+      type: string
+      description: VM ID to detach ISO from
+      required: false
+    vm_name:
+      type: string
+      description: VM Name to detach ISO from
+      required: false
+    answer:
+      type: string
+      description: Answer to question. Yes/No.
+      required: false
+      enum:
+      - 'Yes'
+      - 'No'
+      default: 'Yes'
+    vsphere:
+      type: string
+      description: Pre-configured vsphere endpoint
+      required: false
+      default: ~
