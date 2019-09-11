@@ -1,0 +1,19 @@
+---
+  name: vm_iso_check
+  runner_type: python-script
+  description: Check if there is attached ISOs to Virtual Machine.
+  entry_point: vm_iso_check.py
+  parameters:
+    vm_id:
+      type: string
+      description: VM ID to check for ISOs
+      required: false
+    vm_name:
+      type: string
+      description: VM Name to check for ISOs
+      required: false
+    vsphere:
+      type: string
+      description: Pre-configured vsphere endpoint
+      required: false
+      default: ~
