@@ -1,0 +1,26 @@
+---
+  name: resource_pool_remove
+  runner_type: python-script
+  description: Remove Resource Pools
+  entry_point: resource_pool_remove.py
+  parameters:
+    rp_ids:
+      type: array
+      description: "Resource Pool IDs that needs to be removed."
+      required: false
+      position: 0
+    rp_names:
+      type: array
+      description: "Resource Pool Names that needs to be removed."
+      required: false
+      position: 1
+    cluster_name:
+      type: string
+      description: "Cluster Name where Resource Pools that needs to be removed exist."
+      required: true
+      position: 2
+    vsphere:
+      type: string
+      description: Pre-configured vsphere endpoint
+      required: false
+      default: ~
