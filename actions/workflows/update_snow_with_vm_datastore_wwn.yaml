@@ -30,7 +30,7 @@ tasks:
     next:
       - when: <% succeeded() %>
         publish: 
-          - notes: "Requested resources: <% ctx().vm_names %>\n Response: <% result().result %>."
+          - notes: 'Requested resources: <% ctx().vm_names %>\n Response: <% result().result %>.'
           - state: 3
         do: update_snow
       - when: <% failed() %>
