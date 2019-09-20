@@ -64,11 +64,14 @@ class ResourcePoolRemove(BaseAction):
             if r.name in rp_names:
                 #print(r.summary)
                 if parent_c == r.parent:
-                    task = r.Destroy_Task()
-                    #print(r)
-                    #print('Resource pool:')
-                    #print(r.parent)
-                    #print(r.name)
+                    if len(r.vm) == 0:
+                        # Remove ResourcePool only if there is no VMs inside
+                        task = r.Destroy_Task()
+                    else:
+                        rp_vms = []
+                        for vm in r.vm:
+                            rp_vms.append(vm.name)
+                        return (False, {'state': False, 'msg': rp_vms})
 
         
         success = self._wait_for_task(task)
@@ -77,34 +80,3 @@ class ResourcePoolRemove(BaseAction):
             return (False, {'state': success, 'msg': task})
         else:
             return {'state': success}
-
-        '''
-        vm_ds_wwns = {}
-
-        # get storages
-        datastore_container = self.si_content.viewManager.CreateContainerView(self.si_content.rootFolder,
-                                                                              [vim.Datastore], True)
-        datastores_list = datastore_container.view
-        datastore_container.Destroy()
-
-        # get vm object
-        for vm in vms_list:
-            if vm.name in vm_names:
-                vm_ds_wwns[vm.name] = {}
-                vm_disks_list = []
-                for vmd in vm.datastore:
-                    if vmd in datastores_list:
-                        for d in datastores_list:
-                            if d == vmd:
-                                for te in d.info.vmfs.extent:
-                                    vm_disks_list.append({'datastore': d.name, 'wwn': te.diskName})
-                                vm_ds_wwns[vm.name] = vm_disks_list
-                    else:
-                        vm_ds_wwns[vm.name] = {'msg': 'Datastore {} was not found.'.format(vmd.name)}
-
-        result = vm_ds_wwns
-
-        return result
-
-        return vm.resourcePool.config.entity._moId
-        '''
