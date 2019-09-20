@@ -1,0 +1,33 @@
+---
+  name: update_snow_on_vm_cluster_ds_migration_iso
+  runner_type: orquesta
+  entry_point: workflows/update_snow_on_vm_cluster_ds_migration_iso.yaml
+  enabled: true
+  description: "Update SNOW ticket on Virutal Machine Datastore migration between the clusters with ISO detachement."
+  parameters:
+    vm_name:
+      type: string
+      description: "VM to migrate."
+      required: true
+      position: 0
+    cluster:
+      type: string
+      description: "Cluster name to which VM need to be migrated to."
+      required: true
+      position: 1
+    sysid:
+      type: string
+      description: "ServiceNow SysId of a ticket."
+      required: true
+      position: 2
+    table:
+      type: string
+      description: "ServiceNow ticket table name."
+      required: true
+      position: 3
+    vsphere:
+      type: string
+      description: "Pre-configured vSphere connection details."
+      required: false
+      position: 4
+      default: ~

@@ -1,0 +1,49 @@
+version: '1.0'
+
+description: Update SNOW ticket on removal of ResourcePool.
+
+input:
+  - rp_names
+  - vsphere
+  - cluster_name
+  - sysid
+  - table
+
+vars:
+  - script_exit_code: -1
+  - payload: ''
+  - script_stdout: ''
+  - script_stderr: ''
+  - state: ''
+  - notes: ''
+
+output:
+  - exit_code: <% ctx().script_exit_code %>
+  - stderr: <% ctx().script_stderr %>
+  - stdout: <% ctx().script_stdout %>
+
+tasks:
+  resourcePool_remove:
+    action: vsphere.resource_pool_remove
+    input:
+      rp_names: <% ctx().rp_names %>
+      cluster_name: <% ctx().cluster_name %>
+      vsphere: <% ctx().vsphere %>
+    next:
+      - when: <% succeeded() %>
+        publish:
+          - notes: 'Resource Pool <% ctx().rp_names %> was successfully removed.'
+          - state: 3
+        do: update_snow
+      - when: <% failed() %>
+        publish:
+          - notes: 'Virtual Machine <% ctx().rp_names %> failed to be removed due to:\n <% result().result.msg %>.'
+          - state: 4
+        do: update_snow
+
+  update_snow:
+    action: servicenow.update
+    input:
+      sysid: <% ctx().sysid %>
+      table: <% ctx().table %>
+      payload: '{"state": <% ctx().state %>, "work_notes": """<% ctx().notes %>"""}'

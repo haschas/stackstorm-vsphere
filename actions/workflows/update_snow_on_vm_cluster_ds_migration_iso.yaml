@@ -1,0 +1,68 @@
+version: '1.0'
+
+description: Update SNOW ticket on Virutal Machine Datastore migration between the clusters.
+
+input:
+  - vm_name
+  - vsphere
+  - cluster
+  - sysid
+  - table
+  - answer
+
+vars:
+  - script_exit_code: -1
+  - payload: ''
+  - script_stdout: ''
+  - script_stderr: ''
+  - state: ''
+  - notes: ''
+  - attached: ''
+  - connected: ''
+  - answer: ''
+
+output:
+  - exit_code: <% ctx().script_exit_code %>
+  - stderr: <% ctx().script_stderr %>
+  - stdout: <% ctx().script_stdout %>
+
+tasks:
+  detach_iso:
+    action: vsphere.vm_iso_detach
+    input:
+      vm_name: <% ctx().vm_name %>
+      vsphere: <% ctx().vsphere %>
+      answer: <% ctx().answer %>
+    next:
+      - when: <% succeeded() %>
+        do: migrate_vm
+      - when: <% failed() %>
+        publish:
+          - notes: 'Virtual Machine <% ctx().vm_name %> failed to be migrated due to:\n <% result().result.msg %>.'
+          - state: 11
+        do: update_snow
+
+  migrate_vm:
+    action: vsphere.vm_migrate_cluster_ds
+    input:
+      vm_name: <% ctx().vm_name %>
+      vsphere: <% ctx().vsphere %>
+      cluster: <% ctx().cluster %>
+    next:
+      - when: <% succeeded() %>
+        publish: 
+          - notes: "Virtual Machine <% ctx().vm_name %> was successfully migrated into datastore <% result().result.dest_datastore %> on cluster <% ctx().cluster %>."
+          - state: 3
+        do: update_snow
+      - when: <% failed() %>
+        publish:
+          - notes: "Virtual Machine <% ctx().vm_name %> wasn't migrated to cluster <% ctx().cluster %> due to: <% result().result.msg %>"
+          - state: 4
+        do: update_snow
+
+  update_snow:
+    action: servicenow.update
+    input:
+      sysid: <% ctx().sysid %>
+      table: <% ctx().table %>
+      payload: '{"state": <% ctx().state %>, "work_notes": """<% ctx().notes %>"""}'
