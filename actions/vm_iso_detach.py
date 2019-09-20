@@ -22,7 +22,7 @@ from vmwarelib.actions import BaseAction
 
 
 class VMDetachISO(BaseAction):
-    def run(self, vm_name, vm_id, answer, vsphere=None):
+    def run(self, vm_name, vm_id, answer=None, vsphere=None):
         """
         Create barebones VM (CPU/RAM/Graphics)
 
@@ -84,9 +84,20 @@ class VMDetachISO(BaseAction):
 
             while remove_iso_task.info.state not in [vim.TaskInfo.State.success, vim.TaskInfo.State.error]:
                 if vm_obj.runtime.question is not None:
-                    question_id = vm_obj.runtime.question.id
-                    vm_obj.AnswerVM(question_id, qa)
-                # using time.sleep wait for answer to be applied
+                    for qm in vm_obj.runtime.question.message:
+                        if qm.id == 'msg.cdromdisconnect.locked':
+                            msg = qm.text
+                            question_id = vm_obj.runtime.question.id
+                            if answer:
+                                if answer == "Yes":
+                                    vm_obj.AnswerVM(question_id, qa)
+                            else:
+                                # Answering with No, to leave ISO connected
+                                vm_obj.AnswerVM(question_id, str(1))
+                # using time.sleep to wait for answer to be applied
                 time.sleep(5)
-            
-            return remove_iso_task.info.state == vim.TaskInfo.State.success
+            #print(remove_iso_task.info.state)
+            if remove_iso_task.info.state == vim.TaskInfo.State.error:
+                return (False, {'state': remove_iso_task.info.state, 'msg': msg})
+            else:
+                return {'state': remove_iso_task.info.state}

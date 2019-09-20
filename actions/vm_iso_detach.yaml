@@ -16,10 +16,6 @@
       type: string
       description: Answer to question. Yes/No.
       required: false
-      enum:
-      - 'Yes'
-      - 'No'
-      default: 'Yes'
     vsphere:
       type: string
       description: Pre-configured vsphere endpoint
